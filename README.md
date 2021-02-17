@@ -1,5 +1,7 @@
 # <i>k</i>-means Study Buddy
 
+![Sample](./sample.png)
+
 These HTML5 codes do 2 things:
 
 1. Lets you to add points on the canvas and show the center the points.
