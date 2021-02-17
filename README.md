@@ -1,6 +1,4 @@
-# kmeans_study_buddy
-
-Linear separability through <I>k</I>-means' center-based mechanism
+# <i>k</i>-means Study Buddy
 
 These HTML5 codes do 2 things:
 
