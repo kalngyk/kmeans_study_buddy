@@ -1,6 +1,6 @@
 # <i>k</i>-means Study Buddy
 
-![Sample](./sample.png=898x455)
+![Sample](./sample.png =898x455)
 
 These HTML5 codes do 2 things:
 
