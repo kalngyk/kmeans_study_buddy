@@ -1,7 +1,6 @@
 # <i>k</i>-means Study Buddy
 
-<img src="sample.png" alt="drawing" width="898"/>
-![Sample](./sample.png =898x455)
+<img src="sample.png" alt="drawing" width="898" height="455"/>
 
 These HTML5 codes do 2 things:
 
