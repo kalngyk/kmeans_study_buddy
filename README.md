@@ -1,6 +1,6 @@
 # <i>k</i>-means Study Buddy
 
-<img src="sample.png" width="898" height="455">
+<img src="sample.png" width="455">
 
 These HTML5 codes do 2 things:
 
