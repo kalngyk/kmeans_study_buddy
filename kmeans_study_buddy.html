@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0px;
+        padding: 0px;
+      }
+      canvas {
+        margin-left:10px;
+        margin-top:10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="margin-left:10px;">Linear separability through <I>k</I>-means' center-based mechanism</h1>
+    <div style="margin-left:10px">These HTML5 codes do 2 things:<BR/>
+      1. Lets you to add points on the canvas and show the center the points.<BR/>
+      <div style="margin-left:20px">Two groups of points can be added. One green (Add pos data) and one red (Add neg data)</div>      
+      2. Lets you draw two points (Set center 1 and Set center 2 respectively) on the canvas and shows a divider line according to the <I>k</I>-means algorithm.<BR/>
+      <BR/>
+      This will help you better understand how <i>k</i>-means works and why its problem is not just with linear separability, but also with its center-based divider mechanism.
+    </div>
+      <BR/>
+    <div style="margin-left:10px;">
+    <a href="javascript:setClus1();">Add pos data</a> 
+    | <a href="javascript:setClus2();">Add neg data</a>
+    <br>
+    <a href="javascript:setCen1();">Set center 1</a>
+    <span id=cen1>(-)</span>
+    <br>
+    <a href="javascript:setCen2();">Set center 2</a>
+    <span id=cen2>(-)</span>
+    <br>
+    <a href="javascript:clear();">Clear</a>
+    </div>
+    <div style="position: relative;">
+    <canvas id="canvas" width="578" height="200"
+            style="border:1px solid #000000; position: absolute; left: 0; top: 0; z-index: 2;"></canvas>
+    <canvas id="clus1cen" width="578" height="200"
+            style="position: absolute; left: 0; top: 0; z-index: 1;"></canvas>
+    <canvas id="clus2cen" width="578" height="200"
+            style="position: absolute; left: 0; top: 0; z-index: 0;"></canvas>
+    </div>
+    <script>
+      var clus1x = [];
+      var clus1y = [];
+      var clus2x = [];
+      var clus2y = [];
+      var x1, y1, x2, y2;
+      var cen1set = false; 
+      var cen2set = false;
+      var top_x, top_y, bot_x, bot_y;
+      var linedrawn = false;
+      var whichelem = 0;
+      var canvas = document.getElementById('canvas');
+      var clus1cen = document.getElementById('clus1cen');
+      var clus2cen = document.getElementById('clus2cen');
+
+      function setClus1() { whichelem = 0; }
+      function setClus2() { whichelem = 1; }
+      function setCen1()  { whichelem = 2; }
+      function setCen2()  { whichelem = 3; }
+
+      function getMousePos(canvas, evt) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+          x: evt.clientX - rect.left,
+          y: evt.clientY - rect.top
+        };
+      }
+      
+      function clear()
+      {
+        clus1x.length = 0;
+        clus1y.length = 0;
+        clus2x.length = 0;
+        clus2y.length = 0;
+        cen1set = false; 
+        cen2set = false;
+        linedrawn = false;
+        var ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx = clus1cen.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx = clus2cen.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        whichelem = 0;
+      }
+      
+      function drawline(canvas)
+      {
+        var ctx = canvas.getContext('2d');
+        if (linedrawn)
+        {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.strokeStyle = "#0A0";
+          ctx.fillStyle = "#4A0";
+          for(var i=0; i < clus1x.length; i++)
+          {
+            ctx.beginPath();
+            ctx.arc(clus1x[i], clus1y[i], 2, 0, 2*Math.PI);
+            ctx.stroke();
+            ctx.fill();
+          }
+          ctx.strokeStyle = "#A00";
+          ctx.fillStyle = "#F40";
+          for(var i=0; i < clus2x.length; i++)
+          {
+            ctx.beginPath();
+            ctx.arc(clus2x[i], clus2y[i], 2, 0, 2*Math.PI);
+            ctx.stroke();
+            ctx.fill();
+          }
+        }
+        ctx.beginPath();
+        ctx.strokeStyle = "#000";
+        ctx.fillStyle = "#000";
+        ctx.arc(x1, y1, 3, 0, 2*Math.PI);
+        ctx.stroke();
+        ctx.fill();
+        ctx.beginPath();
+        ctx.strokeStyle = "#000";
+        ctx.fillStyle = "#000";
+        ctx.arc(x2, y2, 3, 0, 2*Math.PI);
+        ctx.stroke();
+        ctx.fill();
+        // Use Pythagoras theorem
+        // y1^2+(x-x1)^2=y2^2+(x2-x)^2
+        // y1^2+x^2-2xx1+x1^2=y2^2+x2^2-2xx2+x^2
+        // x=(y1^2+x1^2-x2^2-y2^2)/(2x1-2x2)
+        var top_x = (y1*y1 + x1*x1 - x2*x2 - y2*y2)/(2*(x1 - x2));
+        var top_y = 0;
+        var dy1 = canvas.height - y1;
+        var dy2 = canvas.height - y2;
+        var bot_x = (dy1*dy1 + x1*x1 - x2*x2 - dy2*dy2)/(2*(x1 - x2));
+        var bot_y = canvas.height;
+        ctx.beginPath();
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = "#000";
+        ctx.moveTo(top_x, top_y);
+        ctx.lineTo(bot_x, bot_y);
+        ctx.stroke();
+        linedrawn = true;
+      }
+
+      function draw(x, y)
+      {
+        
+        var ctx = canvas.getContext('2d');
+        if (whichelem == 0)
+        {
+          clus1x.push(x);
+          clus1y.push(y);
+          ctx.beginPath();
+          ctx.strokeStyle = "#0A0";
+          ctx.fillStyle = "#4A0";
+          ctx.arc(x, y, 2, 0, 2*Math.PI);
+          ctx.stroke();
+          ctx.fill();
+          var ctx2 = clus1cen.getContext('2d');        
+          ctx2.clearRect(0, 0, clus1cen.width, clus1cen.height);
+          ctx2.beginPath();
+          ctx2.strokeStyle = "#0A0";
+          ctx2.fillStyle = "#fff";
+          var cluscen_x = 0;
+          var cluscen_y = 0;
+          for (var i=0; i < clus1x.length; i++)
+          {
+            cluscen_x += clus1x[i];
+            cluscen_y += clus1y[i];
+          }
+          cluscen_x /= clus1x.length;
+          cluscen_y /= clus1x.length;
+          ctx2.arc(cluscen_x, cluscen_y, 3, 0, 2*Math.PI);
+          ctx2.stroke();
+          ctx2.fill();
+        }
+        else if (whichelem == 1)
+        {
+          clus2x.push(x);
+          clus2y.push(y);
+          ctx.beginPath();
+          ctx.strokeStyle = "#A00";
+          ctx.fillStyle = "#F40";
+          ctx.arc(x, y, 2, 0, 2*Math.PI);
+          ctx.stroke();
+          ctx.fill();
+          var ctx2 = clus2cen.getContext('2d');        
+          ctx2.clearRect(0, 0, clus2cen.width, clus2cen.height);
+          ctx2.beginPath();
+          ctx2.strokeStyle = "#A00";
+          ctx2.fillStyle = "#fff";
+          var cluscen_x = 0;
+          var cluscen_y = 0;
+          for (var i=0; i < clus2x.length; i++)
+          {
+            cluscen_x += clus2x[i];
+            cluscen_y += clus2y[i];
+          }
+          cluscen_x /= clus2x.length;
+          cluscen_y /= clus2x.length;
+          ctx2.arc(cluscen_x, cluscen_y, 3, 0, 2*Math.PI);
+          ctx2.stroke();
+          ctx2.fill();
+        }
+        else if (whichelem == 2)
+        {
+          // remove the previous center
+          if (cen1set)
+          {
+            ctx.beginPath();
+            ctx.strokeStyle = "#fff";
+            ctx.fillStyle = "#fff";
+            ctx.arc(x1, y1, 3, 0, 2*Math.PI);
+            ctx.stroke();
+            ctx.fill();
+          }
+          
+          var coord = document.getElementById('cen1');
+          coord.innerHTML = "(" + parseInt(x) + ", " + parseInt(y) + ")";
+          x1 = x;
+          y1 = y;
+          cen1set = true;
+          if (cen1set && cen2set)
+          {
+            drawline(canvas);
+          }
+          else
+          {
+            ctx.beginPath();
+            ctx.strokeStyle = "#000";
+            ctx.fillStyle = "#000";
+            ctx.arc(x1, y1, 3, 0, 2*Math.PI);
+            ctx.stroke();
+            ctx.fill();
+          }
+        }
+        else if (whichelem == 3)
+        {
+          // remove the previous center
+          if (cen2set)
+          {
+            ctx.beginPath();
+            ctx.strokeStyle = "#fff";
+            ctx.fillStyle = "#fff";
+            ctx.arc(x2, y2, 3, 0, 2*Math.PI);
+          }
+          
+          var coord = document.getElementById('cen2');
+          coord.innerHTML = "(" + parseInt(x) + ", " + parseInt(y) + ")";
+          x2 = x;
+          y2 = y;
+          cen2set = true;
+          if (cen1set && cen2set)
+          {
+            drawline(canvas);
+          }
+          else
+          {
+            ctx.beginPath();
+            ctx.strokeStyle = "#000";
+            ctx.fillStyle = "#000";
+            ctx.arc(x2, y2, 3, 0, 2*Math.PI);
+            ctx.stroke();
+            ctx.fill();
+          }
+        }
+      }
+
+      canvas.addEventListener('mousedown', function(evt) {
+        var mousePos = getMousePos(canvas, evt);
+        draw(mousePos.x, mousePos.y);
+      }, false);
+    </script>
+  </body>
+</html>
