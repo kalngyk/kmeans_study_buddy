@@ -1,6 +1,7 @@
 # <i>k</i>-means Study Buddy
 
-<img src="sample.png" alt="drawing" width="898" height="455"/>
+img[alt=drawing] { width: 898px; }
+![sample](sample.png)
 
 These HTML5 codes do 2 things:
 
