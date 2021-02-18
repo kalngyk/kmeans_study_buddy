@@ -11,9 +11,4 @@ This code snippet does only 2 things:
 
 2. Lets you draw two points ("Set center 1" and "Set center 2" respectively) on the canvas and shows a divider line according to the <I>k</I>-means algorithm. (The divider is an equidistance line from both points.)
 
-
-
-
 This will help you better understand how <i>k</i>-means works and why it not only has a problem with linear separability, but also with its equi-distance line method for classification.
-
-These codes run on any browser, including smartphones'.
