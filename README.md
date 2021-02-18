@@ -4,7 +4,7 @@ TL;DR [Just run it](https://kalngyk.github.io/kmeans_study_buddy.html)
 
 This code snippet does only 2 things:
 
-<img src="sample.png" width="300" align="right">
+<img src="sample.png" width="350" align="right">
 
 1. Lets you add points on the drawing area and shows the center of the points added.
    - Two groups of points can be added. One green ("Add pos data") and one red ("Add neg data")
