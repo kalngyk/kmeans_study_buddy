@@ -1,5 +1,7 @@
 # <i>k</i>-means Study Buddy
 
+TL;DR [Just run it](https://kalngyk.github.io/kmeans_study_buddy.html)
+
 This code snippet does only 2 things:
 
 1. Lets you add points on the drawing area and shows the center of the points added.
@@ -12,4 +14,4 @@ This code snippet does only 2 things:
 
 This will help you better understand how <i>k</i>-means works and why its problem is not just with linear separability, but also with its equi-distance line method for classification.
 
-This application is entirely in HTML5 and works on anywhere with a browser. [Run it](https://kalngyk.github.io/kmeans_study_buddy.html)
+This application is entirely in HTML5 and works on anywhere with a browser. 
