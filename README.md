@@ -16,4 +16,4 @@ This code snippet does only 2 things:
 
 This will help you better understand how <i>k</i>-means works and why it not only has a problem with linear separability, but also with its equi-distance line method for classification.
 
-These codes run on anywhere with a browser, including smartphones.
+These codes run on any browser, including smartphones'.
