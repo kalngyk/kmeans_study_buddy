@@ -1,6 +1,6 @@
 # <i>k</i>-means Study Buddy
 
-The Study Buddy does only 2 things:
+This code snipplet does only 2 things:
 
 1. Lets you add points on the drawing area and shows the center of the points added.
    - Two groups of points can be added. One green ("Add pos data") and one red ("Add neg data")
